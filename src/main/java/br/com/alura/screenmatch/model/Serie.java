@@ -1,17 +1,37 @@
 package br.com.alura.screenmatch.model;
 
+import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsultaGemini;
+import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
+@Entity
+@Table(name = "series")
+
 public class Serie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String titulo;
+
     private Integer totalTemporadas;
     private Double avaliacao;
+
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
+
     private String atores;
     private String poster;
     private String sinopse;
+
+    @Transient
+    private List<Episodio> episodios =  new ArrayList<>();
 
     public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
@@ -21,6 +41,14 @@ public class Serie {
         this.atores = dadosSerie.atores();
         this.poster = dadosSerie.poster();
         this.sinopse = ConsultaGemini.obterTraducao(dadosSerie.sinopse());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAtores() {
@@ -77,6 +105,14 @@ public class Serie {
 
     public void setTotalTemporadas(Integer totalTemporadas) {
         this.totalTemporadas = totalTemporadas;
+    }
+
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodio> episodios) {
+        this.episodios = episodios;
     }
 
     @Override
