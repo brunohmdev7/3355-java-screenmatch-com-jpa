@@ -14,7 +14,7 @@ public class ConsultaGemini {
                 .temperature(0.7)
                 .build();
 
-        String prompt = "Traduza para o português o seguinte texto: " + texto;
+        String prompt = "Traduza para o português o seguinte texto: " + texto + " /// OBS: não ultrapase os 1000 caracteres";
 
         return model.chat(prompt).trim();
     }

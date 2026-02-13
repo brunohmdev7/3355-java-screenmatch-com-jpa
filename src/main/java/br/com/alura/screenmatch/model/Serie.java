@@ -1,10 +1,7 @@
 package br.com.alura.screenmatch.model;
 
-import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsultaGemini;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -28,10 +25,14 @@ public class Serie {
 
     private String atores;
     private String poster;
+
+    @Column(length = 1000)
     private String sinopse;
 
-    @Transient
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Episodio> episodios =  new ArrayList<>();
+
+    public Serie() {}
 
     public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
@@ -112,6 +113,7 @@ public class Serie {
     }
 
     public void setEpisodios(List<Episodio> episodios) {
+        episodios.forEach(e -> e.setSerie(this));
         this.episodios = episodios;
     }
 
@@ -122,6 +124,7 @@ public class Serie {
                 " Total Temporadas: " + this.getTotalTemporadas() +
                 " Avaliação: " +  this.getAvaliacao() +
                 " Sinopse: " + this.getSinopse() +
-                " Poster: " + this.getPoster();
+                " Poster: " + this.getPoster() +
+                " Episódios: " + this.getEpisodios();
     }
 }
